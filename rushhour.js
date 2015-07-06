@@ -407,6 +407,16 @@ function initBoard() {
 	return board;
 }
 
+function linesToBoard(solverBoard){
+	var solverVehicles = [];
+	for (var i = 0; i < 6; i++) {
+		if (solverBoard.lines[i].code === [true, false, false, false, false, false]) {
+			vehicles.push(new Vehicle(i, 0, true, 2));
+		}
+	}
+	return vehicles;
+}
+
 function showAsImage() {
 	var img = boardCanvas.toDataURL("image/png");
 	document.write('<img src="' + img + '"/>');
