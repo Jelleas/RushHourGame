@@ -418,10 +418,11 @@ var blockSize = boardCanvas.width / 6;
 var board = initBoard();
 //var boardJava = document.getElementById('Generator').getClusterLink().getWhere("id = 27964162").get(0).getBoards().get(0);
 //var boardJava = document.getElementById('Generator').getClusterLink().getWhere("id = 14444975 ").get(0).getBoardsAtMaxDistance().get(0);
-var boardJava = document.getElementById('Generator').getSolution(document.getElementById('Generator').getHardestBoard());
+//var boardJava = document.getElementById('Generator').getSolution(document.getElementById('Generator').getHardestBoard());
 //var boardJava = document.getElementById('Generator').getHardestBoard();
 //var boardJava = document.getElementById('Generator').getClusterLink().getWhere("maxDistance = 52").get(0).getBoardsAtMaxDistance().get(0);
-var vehicles = initVehicles(board, boardJava.getRows(), boardJava.getColumns());
+//var vehicles = initVehicles(board, boardJava.getRows(), boardJava.getColumns());
+var vehicles = initVehiclesSubclusterExample(board);
 //var vehicles = initVehiclesMoveExample(board);
 var colors = randomColors(vehicles.length);
 
