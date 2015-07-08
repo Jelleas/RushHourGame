@@ -352,19 +352,6 @@ function initVehiclesMoveExample(board) {
 	return vehicles;
 }
 
-function initBoard() {
-	var board = [];
-
-	for (var i = 0; i < boardSize; i++) {
-		board[i] = [];
-		for (var j = 0; j < boardSize; j++) {
-			board[i][j] = false;
-		}
-	}
-
-	return board;
-}
-
 function extractVehicles(solverBoard){
 	var vehicles = [];
 
@@ -391,6 +378,29 @@ function extractVehicles(solverBoard){
 	return vehicles;
 }
 
+function colorVehicles(vehicles) {
+	var colors = randomColors(vehicles.length);
+	for (var i = 0; i < vehicles.length; i++) {
+		if (vehicles[i].color == vehicles[i].defaultColor) {
+			vehicles[i].changeColor(colors[i]);
+		}
+	}
+	return vehicles;
+}
+
+function initBoard() {
+	var board = [];
+
+	for (var i = 0; i < boardSize; i++) {
+		board[i] = [];
+		for (var j = 0; j < boardSize; j++) {
+			board[i][j] = false;
+		}
+	}
+
+	return board;
+}
+
 function showAsImage() {
 	var img = boardCanvas.toDataURL("image/png");
 	document.write('<img src="' + img + '"/>');
@@ -405,12 +415,7 @@ var board = initBoard();
 //var vehicles = initVehiclesMoveExample(board);
 
 var vehicles = extractVehicles(solverBoard);
-var colors = randomColors(vehicles.length);
-for (var i = 0; i < vehicles.length; i++) {
-	if (vehicles[i].color == vehicles[i].defaultColor) {
-		vehicles[i].changeColor(colors[i]);
-	}
-}
+vehicles = colorVehicles(vehicles);
 
 var mouseState = {};
 mouseState.dragging = false;
