@@ -302,59 +302,6 @@ function Vehicle(posX, posY, orientation, size) {
 	}
 }
 
-function initVehicles(board, rows, columns) {
-	var vehicles = [];
-	var numVehicles = 0;
-	var vehicleFoundOnRow = false;
-	var vehicleFoundOnColumn = false;
-	for (var i = 0; i < boardSize; i++) {
-		vehicleFoundOnRow = false;
-		vehicleFoundOnColumn = false;
-		
-		for (var j = 0; j < boardSize - 1; j++) {
-			if (rows[i].line[j] && !vehicleFoundOnRow) {
-				vehicleFoundOnRow = true;
-				if (rows[i].line[j + 1]) {
-					vehicles[numVehicles] = new Vehicle(j, i, false, 3)
-				} else {
-					vehicles[numVehicles] = new Vehicle(j, i, false, 2)
-				}
-
-				if (i == Math.floor((boardSize - 2) / 2)) { // turns red car red.
-					var tempVehicle = vehicles[vehicles.length - 1];
-					vehicles[vehicles.length - 1] = vehicles[0];
-					vehicles[0] = tempVehicle;
-				}
-
-				numVehicles++;
-			}
-			else if (!rows[i].line[j]) {
-				vehicleFoundOnRow = false;
-			}
-
-			if (columns[i].line[j] && !vehicleFoundOnColumn) {
-				vehicleFoundOnColumn = true;
-				if (columns[i].line[j + 1]) {
-					vehicles[numVehicles] = new Vehicle(i, j, true, 3)
-				} else {
-					vehicles[numVehicles] = new Vehicle(i, j, true, 2)
-				}
-				numVehicles++;
-			}
-			else if (!columns[i].line[j]) {
-				vehicleFoundOnColumn = false;
-			}
-		}
-	}
-	
-	for (var i = 0; i < vehicles.length; i++) {
-		var vehicle = vehicles[i];
-		snapToGrid(vehicle);
-	}
-
-	return vehicles;
-}
-
 function initVehiclesSubclusterExample(board) {
 	var vehicles = [];
 	vehicles[0] = new Vehicle(3, 2, false, 2);
@@ -437,11 +384,6 @@ var boardSize = 6;
 var blockSize = boardCanvas.width / 6;
 
 var board = initBoard();
-//var boardJava = document.getElementById('Generator').getClusterLink().getWhere("id = 27964162").get(0).getBoards().get(0);
-//var boardJava = document.getElementById('Generator').getClusterLink().getWhere("id = 14444975 ").get(0).getBoardsAtMaxDistance().get(0);
-//var boardJava = document.getElementById('Generator').getSolution(document.getElementById('Generator').getHardestBoard());
-//var boardJava = document.getElementById('Generator').getHardestBoard();
-//var boardJava = document.getElementById('Generator').getClusterLink().getWhere("maxDistance = 52").get(0).getBoardsAtMaxDistance().get(0);
 //var vehicles = initVehicles(board, boardJava.getRows(), boardJava.getColumns());
 //var vehicles = initVehiclesSubclusterExample(board);
 //var vehicles = initVehiclesMoveExample(board);
