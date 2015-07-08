@@ -432,8 +432,8 @@ var board = initBoard();
 //var boardJava = document.getElementById('Generator').getHardestBoard();
 //var boardJava = document.getElementById('Generator').getClusterLink().getWhere("maxDistance = 52").get(0).getBoardsAtMaxDistance().get(0);
 //var vehicles = initVehicles(board, boardJava.getRows(), boardJava.getColumns());
-var vehicles = initVehiclesSubclusterExample(board);
-//var vehicles = initVehiclesMoveExample(board);
+//var vehicles = initVehiclesSubclusterExample(board);
+var vehicles = initVehiclesMoveExample(board);
 var colors = randomColors(vehicles.length);
 
 var mouseState = {};
