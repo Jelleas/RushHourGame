@@ -90,7 +90,6 @@ function Line(linecode) {
 		return vehicleOrder;
 	}(this.code, this.cars, this.trucks);
 }
-
 Line.prototype = {
 	constructor : Line,
 	
@@ -115,15 +114,11 @@ Line.prototype = {
 		}
 		
 		var nVehiclesMoved = 0;
+		var vehicles1 = this.cars.concat(this.trucks);
+		var vehicles2 = line.cars.concat(line.trucks);
 
-		for (var i = 0; i < this.cars.length; i++) {
-			if (this.cars[i].location != line.cars[i].location) {
-				nVehiclesMoved += 1;
-			}
-		}
-
-		for (var i = 0; i < this.trucks.length; i++) {
-			if (this.trucks[i].location != line.trucks[i].location) {
+		for (var i = 0; i < vehicles1.length; i++) {
+			if (vehicles1[i].location != vehicles2[i].location) {
 				nVehiclesMoved += 1;
 			}
 		}
@@ -135,6 +130,53 @@ Line.prototype = {
 		return false;
 	}
 }
+
+
+function Board(lines) {
+	this.lines = lines;
+}
+Board.prototype = {
+	constructor : Board,
+	
+	expand : function() {
+		var boards = []
+
+		for (var i = 0; i < this.lines.length; i++) {
+			var line = this.lines[i];
+			
+			for (var j = 0; j < line.connections.length; j++) {
+				var connection = connections[j];
+				var isMovePossible = true;
+
+				for (var k = 0; k < connection.requirements; k++) {
+					var requirement = requirements[k];
+					if (i < boardSize) {
+						if (this.lines[requirement + boardSize][i]) {
+							isMovePossible = false;
+							break;
+						}
+					} else {
+						if (this.lines[requirement][i]) {
+							isMovePossible = false;
+							break;
+						}
+					}
+				}
+
+				if (isMovePossible) {
+					// copy lines for new board
+					var lines = this.lines.slice();
+
+					lines[i] = connection.line2;
+					boards.push(new Board(lines));
+				}
+			}
+		}
+
+		return boards;
+	}
+}
+
 
 function generateLines() {
 	function isValidCode(code) {
@@ -194,24 +236,32 @@ function generateLines() {
 }
 
 
-var lines = generateLines();
-
-for (var i = 0; i < lines.length; i++) {
-	var line = lines[i];
-	console.log(line.code);
-	console.log(line.connections.length);
-	for (var j = 0; j < line.connections.length; j++) {
-		var otherLine = line.connections[j].line2;
-		console.log("     " + otherLine.code.toString());
+function exampleBoard() {
+	var boardLines = [];
+	for (var i = 0; i < 2 * boardSize; i++) {
+		boardLines.push(lines[0]);
 	}
+	boardLines[8] = lines[1];
+
+	return new Board(boardLines);
 }
 
-function Board(lines) {
-	this.lines = lines;
+function lineTest() {
+	for (var i = 0; i < lines.length; i++) {
+		var line = lines[i];
+		console.log(line.code);
+		console.log(line.connections.length);
+		for (var j = 0; j < line.connections.length; j++) {
+			var otherLine = line.connections[j].line2;
+			console.log("     " + otherLine.code.toString());
+		}
+	}	
 }
 
 
-
+// Main
+var lines = generateLines();
+solverBoard = exampleBoard();
 
 /*
 // Test code

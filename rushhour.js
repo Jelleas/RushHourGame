@@ -407,11 +407,22 @@ function initBoard() {
 	return board;
 }
 
-function linesToBoard(solverBoard){
-	var solverVehicles = [];
-	for (var i = 0; i < 6; i++) {
-		if (solverBoard.lines[i].code === [true, false, false, false, false, false]) {
-			vehicles.push(new Vehicle(i, 0, true, 2));
+function extractVehicles(solverBoard){
+	var vehicles = [];
+
+	for (var i = 0; i < solverBoard.lines.length; i++) {
+		var line = solverBoard.lines[i];
+		var solverVehicles = line.cars.concat(line.trucks);
+		var orientation = i < boardSize;
+
+		for (var j = 0; j < solverVehicles.length; j++) {
+			var solverVehicle = solverVehicles[j];
+			
+			if (i < boardSize) {
+				vehicles.push(new Vehicle(i, solverVehicle.location, orientation, solverVehicle.size));
+			} else {
+				vehicles.push(new Vehicle(solverVehicle.location, i - boardSize, orientation, solverVehicle.size));
+			}
 		}
 	}
 	return vehicles;
@@ -433,7 +444,9 @@ var board = initBoard();
 //var boardJava = document.getElementById('Generator').getClusterLink().getWhere("maxDistance = 52").get(0).getBoardsAtMaxDistance().get(0);
 //var vehicles = initVehicles(board, boardJava.getRows(), boardJava.getColumns());
 //var vehicles = initVehiclesSubclusterExample(board);
-var vehicles = initVehiclesMoveExample(board);
+//var vehicles = initVehiclesMoveExample(board);
+
+var vehicles = extractVehicles(solverBoard);
 var colors = randomColors(vehicles.length);
 
 var mouseState = {};
@@ -442,4 +455,4 @@ mouseState.vehicle = vehicles[0];
 mouseState.offset = 0;
 
 drawBoard();
-showAsImage();
+//showAsImage();
