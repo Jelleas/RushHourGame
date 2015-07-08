@@ -105,7 +105,7 @@ function drawBoard() {
 	// draw vehicles
 	for (var i = 0; i < vehicles.length; i++) {
 		var vehicle = vehicles[i];
-		context.fillStyle = colors[i];
+		context.fillStyle = vehicle.color;
 		context.fillRect(vehicle.x, vehicle.y, vehicle.xSize, vehicle.ySize);
 		context.strokeRect(vehicle.x, vehicle.y, vehicle.xSize, vehicle.ySize);
 	}
@@ -300,7 +300,18 @@ function Vehicle(posX, posY, orientation, size) {
 		this.xSize = size * blockSize;
 		this.ySize = blockSize;
 	}
+
+	this.defaultColor = "black";
+	this.color = this.defaultColor;
 }
+Vehicle.prototype = {
+	constructor : Vehicle,
+
+	changeColor : function(color) {
+		this.color = color;
+	}
+}
+
 
 function initVehiclesSubclusterExample(board) {
 	var vehicles = [];
@@ -371,6 +382,11 @@ function extractVehicles(solverBoard){
 				vehicles.push(new Vehicle(solverVehicle.location, i - boardSize, orientation, solverVehicle.size));
 			}
 		}
+
+		// turn the red car's color to red.
+		if (i == boardSize + Math.floor(boardSize / 2) - 1) {
+			vehicles[vehicles.length - 1].changeColor("red");			
+		}
 	}
 	return vehicles;
 }
@@ -390,6 +406,11 @@ var board = initBoard();
 
 var vehicles = extractVehicles(solverBoard);
 var colors = randomColors(vehicles.length);
+for (var i = 0; i < vehicles.length; i++) {
+	if (vehicles[i].color == vehicles[i].defaultColor) {
+		vehicles[i].changeColor(colors[i]);
+	}
+}
 
 var mouseState = {};
 mouseState.dragging = false;
