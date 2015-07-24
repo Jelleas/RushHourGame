@@ -309,7 +309,6 @@ GameView.prototype = {
 
 				for (var j = 0; j < solverVehicles.length; j++) {
 					var solverVehicle = solverVehicles[j];
-					console.log(this);
 					if (i < boardSize) {
 						vehicles.push(new view.Vehicle(i, solverVehicle.location, orientation, solverVehicle.size));
 					} else {
