@@ -89,6 +89,15 @@ function Line(linecode) {
 		}
 		return vehicleOrder;
 	}(this.code, this.cars, this.trucks);
+
+	// cached hash
+	this.hashValue = 0;
+	for (var i = 0; i < this.code.length; i++) {
+		this.hashValue = this.hashValue * 2 + this.code[i]; 
+	}
+
+	// cached string representation
+	this.repr = this.hashValue.toString();
 }
 Line.prototype = {
 	constructor : Line,
@@ -128,16 +137,25 @@ Line.prototype = {
 			return true;
 		}
 		return false;
+	},
+
+	hash : function() {
+		return this.hashValue;
+	},
+
+	getStringRepresentation : function() {
+		return this.repr;
 	}
 }
 
 
 function Board(lines) {
 	this.lines = lines;
+	this.size = lines.length / 2;
 }
 Board.prototype = {
 	constructor : Board,
-	
+
 	expand : function() {
 		var boards = []
 
@@ -175,6 +193,77 @@ Board.prototype = {
 		}
 
 		return boards;
+	},
+
+	isSolution : function() {
+		var redCarLine = this.lines[this.size + Math.floor(this.size / 2) - 1];
+		return redCarLine.cars[redCarLine.cars.length - 1].location == this.size - 2;
+	},
+
+	hash : function() {
+		var hashValue = 0;
+		
+		for (var i = 0; i < this.lines.length; i++) {
+			hashValue += this.lines[i].hash();
+		}
+		
+		return hashValue;
+	},
+
+	getStringRepresentation : function() {
+		var repr = "";
+
+		for (var i = 0; i < this.lines.length; i++) {
+			repr += this.lines[i].getStringRepresentation()
+		}
+
+		return repr;
+	}
+}
+
+
+function Cluster(seedBoards) {
+	this.seeds = seedBoards;
+
+	this.Node = function(board) {
+		this.board = board;
+		this.acccessibleBoards = board.expand(); 
+	}
+
+	this.nodes = {};
+}
+Cluster.prototype = {
+	constructor : Cluster,
+
+	expand : function() {
+		var unvisitedNodes = [];
+		for (var i = 0; i < this.seeds.length; i++) {
+			var board = this.seeds[i];
+			var unvisitedNode = new this.Node(board);
+			unvisitedNodes.push(unvisitedNode);
+			this.nodes[board.getStringRepresentation()] = unvisitedNode;
+		}
+
+		while (unvisitedNodes.length > 0) {
+			var newNodes = [];
+
+			for (var i = 0; i < unvisitedNodes.length; i++) {
+				var unvisitedNode = unvisitedNodes[i];
+				
+				for (var j = 0; j < unvisitedNode.acccessibleBoards.length; j++) {
+					var board = unvisitedNode.acccessibleBoards[j];
+					
+
+					if (this.nodes[board.getStringRepresentation()] == undefined) {
+						var newNode = new this.Node(board);
+						this.nodes[board.getStringRepresentation()] = newNode;
+						newNodes.push(newNode);
+					}
+				}
+			}
+
+			unvisitedNodes = newNodes;
+		}
 	}
 }
 
@@ -266,8 +355,25 @@ var solverBoard = exampleBoard();
 
 var boards = solverBoard.expand();
 
+var cluster = new Cluster(boards);
+
+cluster.expand();
+
 gameView.load(solverBoard);
 gameView.draw();
+
+function drawSolution(boards, i) {
+	if (boards.length <= i) {
+		return;
+	}
+
+	gameView.load(boards[i]);
+	gameView.draw();
+
+	setTimeout(function() {
+		drawSolution(boards, i + 1);
+	}, 3000);
+}
 
 /*
 // Test code

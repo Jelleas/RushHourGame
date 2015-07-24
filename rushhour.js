@@ -18,8 +18,6 @@ function GameView() {
 		return board;
 	}();
 
-
-
 	var mouseState = {};
 	mouseState.dragging = false;
 	mouseState.vehicle = this.vehicles[0];
@@ -317,7 +315,7 @@ GameView.prototype = {
 				}
 
 				// turn the red car's color to red.
-				if (i == boardSize + Math.floor(boardSize / 2) - 1) {
+				if (i == view.boardSize + Math.floor(view.boardSize / 2) - 1) {
 					vehicles[vehicles.length - 1].changeColor("red");			
 				}
 			}
