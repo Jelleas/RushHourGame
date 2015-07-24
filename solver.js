@@ -145,11 +145,12 @@ Board.prototype = {
 			var line = this.lines[i];
 			
 			for (var j = 0; j < line.connections.length; j++) {
-				var connection = connections[j];
+				var connection = line.connections[j];
 				var isMovePossible = true;
 
-				for (var k = 0; k < connection.requirements; k++) {
-					var requirement = requirements[k];
+				for (var k = 0; k < connection.requirements.length; k++) {
+					var requirement = connection.requirements[k];
+
 					if (i < boardSize) {
 						if (this.lines[requirement + boardSize][i]) {
 							isMovePossible = false;
@@ -261,7 +262,12 @@ function lineTest() {
 
 // Main
 var lines = generateLines();
-solverBoard = exampleBoard();
+var solverBoard = exampleBoard();
+
+var boards = solverBoard.expand();
+
+gameView.load(solverBoard);
+gameView.draw();
 
 /*
 // Test code
